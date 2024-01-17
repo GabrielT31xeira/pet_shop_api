@@ -18,7 +18,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register",
-     *     tags={"Users"},
+     *     tags={"Authentication"},
      *     summary="Register a new user",
      *     description="Creates a new user account",
      *     @OA\RequestBody(
@@ -98,7 +98,69 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
-
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Authentication"},
+     *     summary="Login a user",
+     *     description="Authenticates a user and returns an access token",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *                 format="email",
+     *                 example="johndoe@example.com",
+     *                 description="Email address of the user"
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 type="string",
+     *                 format="password",
+     *                 example="123456",
+     *                 description="Password of the user"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User logged in successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *             ),
+     *             @OA\Property(
+     *                 property="authorization",
+     *                 type="object",
+     *                 description="Authorization information",
+     *                 @OA\Property(
+     *                     property="token",
+     *                     type="string",
+     *                     description="Access token"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="type",
+     *                     type="string",
+     *                     description="Token type"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Invalid email or password"
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -122,6 +184,22 @@ class AuthController extends Controller
         ], 401);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     tags={"Authentication"},
+     *     summary="Logout a user",
+     *     description="Invalidates the user's access token",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User logged out successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Successfully logged out")
+     *         )
+     *     )
+     * )
+     */
     public function logout()
     {
         Auth::user()->tokens()->delete();
