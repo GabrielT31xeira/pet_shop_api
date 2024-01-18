@@ -43,7 +43,13 @@ class AuthController extends Controller
      *                 format="password",
      *                 example="123456",
      *                 description="Password of the user"
-     *             )
+     *             ),
+     *             @OA\Property(
+     *                  property="role_id",
+     *                  type="string",
+     *                  example="1",
+     *                  description="Role of the user"
+     *              ),
      *         )
      *     ),
      *     @OA\Response(
@@ -85,12 +91,14 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'role_id' => 'required'
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $request->role_id
         ]);
 
         return response()->json([
