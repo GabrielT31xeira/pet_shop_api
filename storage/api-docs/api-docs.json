@@ -35,6 +35,11 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "123456"
+                                    },
+                                    "role_id": {
+                                        "description": "Role of the user",
+                                        "type": "string",
+                                        "example": "1"
                                     }
                                 },
                                 "type": "object"
