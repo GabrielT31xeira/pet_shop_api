@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('ValidAdmin')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -22,4 +22,11 @@ Route::controller(\App\Http\Controllers\AuthController::class)->group(function (
     Route::post('login', 'login')->name('login');
     Route::post('register', 'register');
     Route::post('logout', 'logout');
+});
+
+Route::group(['middleware' => 'ValidAdmin'], function () {
+    Route::get('admins', [\App\Http\Controllers\AdminController::class, 'getAdmins']);
+    Route::post('create/admins', [\App\Http\Controllers\AdminController::class, 'createAdmins']);
+    Route::put('edit/{id}/admin', [\App\Http\Controllers\AdminController::class, 'editAdmins']);
+    Route::delete('delete/{id}/admin', [\App\Http\Controllers\AdminController::class, 'deleteAdmin']);
 });
